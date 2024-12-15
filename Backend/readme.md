@@ -234,3 +234,151 @@ The request body should be in JSON format and must contain the following JSON st
 2. Ensure a user is already registered in the database.
 3. Send a POST request to `/users/login` with the required JSON body.
 4. Verify the response matches the expected output as described above.
+
+---
+
+## /users/profile Endpoint
+
+### Description
+
+The `/users/profile` endpoint retrieves the authenticated user's profile details. The user must be logged in and provide a valid JWT token to access this endpoint.
+
+---
+
+### HTTP Method
+
+**GET**
+
+---
+
+### Endpoint
+
+**`/users/profile`**
+
+---
+
+### Request Headers
+
+- **Authorization:** Bearer `<JWT token>`
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 200 OK
+- **Description:** Returns the user's profile information.
+- **Response Body:**
+
+```json
+{
+  "_id": "string (user ID)",
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string"
+}
+```
+
+#### Error Responses
+
+##### Unauthorized
+
+- **Status Code:** 401 Unauthorized
+- **Description:** The user is not logged in or the token is invalid/expired.
+- **Response Body:**
+
+```json
+{
+  "message": "Unauthorized access"
+}
+```
+
+---
+
+### Notes
+
+- The `authUser` middleware validates the JWT token and attaches the user information to the request object.
+
+---
+
+### How to Test
+
+1. Set up the server with the provided code and necessary environment variables (e.g., `JWT_SECRET`).
+2. Log in to obtain a valid JWT token.
+3. Send a GET request to `/users/profile` with the `Authorization` header set to `Bearer <JWT token>`.
+4. Verify the response matches the expected output as described above.
+
+---
+
+## /users/logout Endpoint
+
+### Description
+
+The `/users/logout` endpoint logs the user out by clearing the authentication token and blacklisting it. The user must be logged in and provide a valid JWT token to access this endpoint.
+
+---
+
+### HTTP Method
+
+**GET**
+
+---
+
+### Endpoint
+
+**`/users/logout`**
+
+---
+
+### Request Headers
+
+- **Authorization:** Bearer `<JWT token>`
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 200 OK
+- **Description:** User successfully logged out and the token is blacklisted.
+- **Response Body:**
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+#### Error Responses
+
+##### Unauthorized
+
+- **Status Code:** 401 Unauthorized
+- **Description:** The user is not logged in or the token is invalid/expired.
+- **Response Body:**
+
+```json
+{
+  "message": "Unauthorized access"
+}
+```
+
+---
+
+### Notes
+
+- The `authUser` middleware validates the JWT token.
+- The token is cleared from cookies and stored in a blacklist collection with a TTL of 24 hours.
+
+---
+
+### How to Test
+
+1. Set up the server with the provided code and necessary environment variables (e.g., `JWT_SECRET`).
+2. Log in to obtain a valid JWT token.
+3. Send a GET request to `/users/logout` with the `Authorization` header set to `Bearer <JWT token>`.
+4. Verify the response matches the expected output as described above.
