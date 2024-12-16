@@ -523,7 +523,7 @@ The request body should be in JSON format and must include the following structu
 2. Send a POST request to `/captains/register` with the required JSON body.
 3. Verify the response matches the expected output as described above.
 
-# Backend API Documentation
+---
 
 ## /captains/login Endpoint
 
