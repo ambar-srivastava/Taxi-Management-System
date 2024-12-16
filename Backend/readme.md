@@ -523,3 +523,278 @@ The request body should be in JSON format and must include the following structu
 2. Send a POST request to `/captains/register` with the required JSON body.
 3. Verify the response matches the expected output as described above.
 
+# Backend API Documentation
+
+## /captains/login Endpoint
+
+### Description
+
+The `/captains/login` endpoint allows a registered captain to log in by providing their email and password. Upon successful authentication, it returns a JSON Web Token (JWT) and the captain's profile information.
+
+---
+
+### HTTP Method
+
+**POST**
+
+---
+
+### Endpoint
+
+**`/captains/login`**
+
+---
+
+### Request Body
+
+The request body should be in JSON format and must include the following structure:
+
+```json
+{
+  "email": "string (valid email format, required)",
+  "password": "string (min length: 6, required)"
+}
+```
+
+#### Example Request Body
+
+```json
+{
+  "email": "captain@example.com",
+  "password": "securePassword123"
+}
+```
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 200 OK
+- **Description:** Captain successfully authenticated, and a JSON Web Token (JWT) is returned.
+- **Response Body:**
+
+```json
+{
+  "token": "string (JWT token)",
+  "captain": {
+    "_id": "string (captain ID)",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": "integer",
+      "vehicleType": "string"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+##### Invalid Credentials
+
+- **Status Code:** 401 Unauthorized
+- **Description:** Incorrect email or password.
+- **Response Body:**
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+##### Validation Error
+
+- **Status Code:** 400 Bad Request
+- **Description:** Validation errors occurred during login.
+- **Response Body:**
+
+```json
+{
+  "errors": [
+    {
+      "msg": "string (error message)",
+      "param": "string (parameter causing the error)",
+      "location": "string (location of the parameter)"
+    }
+  ]
+}
+```
+
+---
+
+### Notes
+
+- The endpoint validates inputs using `express-validator`.
+- Passwords are securely compared using bcrypt.
+- The returned JWT token is signed with the server's secret key and must be included in the `Authorization` header for subsequent authenticated requests.
+
+---
+
+### How to Test
+
+1. Ensure the server is running and the required environment variables (e.g., `JWT_SECRET`) are set.
+2. Send a POST request to `/captains/login` with the required JSON body.
+3. Verify the response matches the expected output as described above.
+
+---
+
+## /captains/profile Endpoint
+
+### Description
+
+The `/captains/profile` endpoint retrieves the authenticated captain's profile details. A valid JWT token is required to access this endpoint.
+
+---
+
+### HTTP Method
+
+**GET**
+
+---
+
+### Endpoint
+
+**`/captains/profile`**
+
+---
+
+### Request Headers
+
+- **Authorization:** Bearer `<JWT token>`
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 200 OK
+- **Description:** Returns the captain's profile information.
+- **Response Body:**
+
+```json
+{
+  "_id": "string (captain ID)",
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string",
+  "vehicle": {
+    "color": "string",
+    "plate": "string",
+    "capacity": "integer",
+    "vehicleType": "string"
+  }
+}
+```
+
+#### Error Responses
+
+##### Unauthorized
+
+- **Status Code:** 401 Unauthorized
+- **Description:** The token is invalid, expired, or missing.
+- **Response Body:**
+
+```json
+{
+  "message": "Unauthorized access"
+}
+```
+
+---
+
+### Notes
+
+- The `authCaptain` middleware validates the JWT token and attaches the captain's information to the request object.
+- This endpoint does not modify any data; it only retrieves the authenticated captain's profile.
+
+---
+
+### How to Test
+
+1. Ensure the server is running and the required environment variables (e.g., `JWT_SECRET`) are set.
+2. Obtain a valid JWT token by logging in as a captain.
+3. Send a GET request to `/captains/profile` with the `Authorization` header set to `Bearer <JWT token>`.
+4. Verify the response matches the expected output as described above.
+
+---
+
+## /captains/logout Endpoint
+
+### Description
+
+The `/captains/logout` endpoint logs the captain out by invalidating the authentication token. A valid JWT token is required to access this endpoint.
+
+---
+
+### HTTP Method
+
+**GET**
+
+---
+
+### Endpoint
+
+**`/captains/logout`**
+
+---
+
+### Request Headers
+
+- **Authorization:** Bearer `<JWT token>`
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 200 OK
+- **Description:** Captain successfully logged out, and the token is invalidated.
+- **Response Body:**
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+#### Error Responses
+
+##### Unauthorized
+
+- **Status Code:** 401 Unauthorized
+- **Description:** The token is invalid, expired, or missing.
+- **Response Body:**
+
+```json
+{
+  "message": "Unauthorized access"
+}
+```
+
+---
+
+### Notes
+
+- The `authCaptain` middleware validates the JWT token.
+- Logged-out tokens should be blacklisted or managed to prevent reuse until expiration.
+- Ensure token expiration and blacklisting mechanisms are correctly implemented on the server side.
+
+---
+
+### How to Test
+
+1. Ensure the server is running and the required environment variables (e.g., `JWT_SECRET`) are set.
+2. Obtain a valid JWT token by logging in as a captain.
+3. Send a GET request to `/captains/logout` with the `Authorization` header set to `Bearer <JWT token>`.
+4. Verify the response matches the expected output as described above.
