@@ -388,7 +388,6 @@ The `/users/logout` endpoint logs the user out by clearing the authentication to
 ## /captains/register Endpoint
 
 <details>
-<summary>Click to expand</summary>
 
 ### Description
 
