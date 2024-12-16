@@ -387,8 +387,6 @@ The `/users/logout` endpoint logs the user out by clearing the authentication to
 
 ## /captains/register Endpoint
 
-<details>
-
 ### Description
 
 The `/captains/register` endpoint allows a new captain to register by providing their personal details and vehicle information. The endpoint validates the input, hashes the password, and stores the captain's details in the database.
