@@ -382,3 +382,147 @@ The `/users/logout` endpoint logs the user out by clearing the authentication to
 2. Log in to obtain a valid JWT token.
 3. Send a GET request to `/users/logout` with the `Authorization` header set to `Bearer <JWT token>`.
 4. Verify the response matches the expected output as described above.
+
+---
+
+## /captains/register Endpoint
+
+<details>
+<summary>Click to expand</summary>
+
+### Description
+
+The `/captains/register` endpoint allows a new captain to register by providing their personal details and vehicle information. The endpoint validates the input, hashes the password, and stores the captain's details in the database.
+
+---
+
+### HTTP Method
+
+**POST**
+
+---
+
+### Endpoint
+
+**`/captains/register`**
+
+---
+
+### Request Body
+
+The request body should be in JSON format and must include the following structure:
+
+```json
+{
+  "fullname": {
+    "firstname": "string (min length: 2, required)",
+    "lastname": "string (min length: 2, optional)"
+  },
+  "email": "string (valid email format, required)",
+  "password": "string (min length: 6, required)",
+  "vehicle": {
+    "color": "string (min length: 3, required)",
+    "plate": "string (min length: 3, required)",
+    "capacity": "integer (min: 1, required)",
+    "vehicleType": "string (allowed values: motorcycle, car, auto)"
+  }
+}
+```
+
+#### Example Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "janesmith@example.com",
+  "password": "securePassword123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
+### Response
+
+#### Success Response
+
+- **Status Code:** 201 Created
+- **Description:** Captain successfully registered, and a success message is returned.
+- **Response Body:**
+
+```json
+{
+  "message": "Captain successfully registered",
+  "captain": {
+    "_id": "string (captain ID)",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": "integer",
+      "vehicleType": "string"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+##### Validation Error
+
+- **Status Code:** 400 Bad Request
+- **Response Body:**
+
+```json
+{
+  "errors": [
+    {
+      "msg": "string (error message)",
+      "param": "string (parameter causing the error)",
+      "location": "string (location of the parameter)"
+    }
+  ]
+}
+```
+
+##### Missing Fields
+
+- **Status Code:** 400 Bad Request
+- **Response Body:**
+
+```json
+{
+  "message": "All fields are required"
+}
+```
+
+</details>
+
+---
+
+### Notes
+
+- The `password` is hashed securely using bcrypt before storage.
+- Input validation is implemented using `express-validator`.
+- Vehicle types must be one of the following: `"motorcycle"`, `"car"`, or `"auto"`.
+
+---
+
+### How to Test
+
+1. Set up the server with the provided code and necessary environment variables (e.g., `JWT_SECRET`).
+2. Send a POST request to `/captains/register` with the required JSON body.
+3. Verify the response matches the expected output as described above.
+
