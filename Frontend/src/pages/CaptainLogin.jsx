@@ -1,14 +1,36 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captainData, setCaptainData] = useState({});
 
-  const submitHandler = (e) => {
+  const { setCaptain } = useContext(CaptainDataContext) || {};
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setCaptainData({ email: email, password: password });
+    const captain = { email: email, password: password };
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/login`,
+        captain
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        setCaptain(data.captain);
+        localStorage.setItem("token", data.token);
+        navigate("/captain/home");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     setEmail("");
     setPassword("");
   };
@@ -35,7 +57,7 @@ const CaptainLogin = () => {
             placeholder="Password"
           />
           <button
-            className="mt-10 bg-[#111] rounded px-4 py-2 w-full text-lg text-white"
+            className="mt-10 bg-[#10b461] rounded px-4 py-2 w-full text-lg text-white"
             type="submit"
           >
             Login as Captain
@@ -44,13 +66,13 @@ const CaptainLogin = () => {
         <p className=" mt-5 text-center font-medium">
           Want to Join out fleet?{" "}
           <Link to="/captain/signup" className="text-blue-500">
-          Register as a Captain?
+            Register as a Captain?
           </Link>
         </p>
       </div>
       <div>
         <Link to="/login">
-          <button className="mb-2 bg-[#d5622d] rounded px-4 py-2 w-full text-lg text-white">
+          <button className="mb-2 bg-[#E89D1B] rounded px-4 py-2 w-full text-lg text-white">
             Sign in as User
           </button>
         </Link>

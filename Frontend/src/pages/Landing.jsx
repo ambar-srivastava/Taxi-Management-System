@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Landing = () => {
   return (
     <div className="bg-[url(https://img.freepik.com/free-photo/yellow-black-sign-taxi-placed-top-car-night_181624-10624.jpg?t=st=1734723586~exp=1734727186~hmac=2edca5cfca551a91aefd19843c725e2fb4cf2413633a91af8782009f3884679c&w=996)] bg-cover bg-center h-screen pt-8 flex flex-col justify-between w-full">
       {/* <img
@@ -21,4 +21,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Landing;

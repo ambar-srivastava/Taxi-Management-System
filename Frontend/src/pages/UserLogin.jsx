@@ -1,14 +1,31 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserDataContext } from "../context/UserContext";
+import axios from "axios";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+
+  const { setUser } = useContext(UserDataContext);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setUserData({ email: email, password: password });
+    const userData = { email: email, password: password };
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/login`,
+      userData
+    );
+
+    if (response.status === 200) {
+      const data = response.data;
+      setUser(data.user);
+      localStorage.setItem("token", data.token);
+      navigate("/home");
+    }
     setEmail("");
     setPassword("");
   };
@@ -36,7 +53,7 @@ const UserLogin = () => {
             placeholder="Password"
           />
           <button
-            className="mt-10 bg-[#111] rounded px-4 py-2 w-full text-lg text-white"
+            className="mt-10 bg-[#10b461] rounded px-4 py-2 w-full text-lg text-white"
             type="submit"
           >
             Login as User
@@ -51,7 +68,7 @@ const UserLogin = () => {
       </div>
       <div>
         <Link to="/captain/login">
-          <button className="mb-2 bg-[#10b461] rounded px-4 py-2 w-full text-lg text-white">
+          <button className="mb-2 bg-[#E89D1B] rounded px-4 py-2 w-full text-lg text-white">
             Sign in as Captain
           </button>
         </Link>
