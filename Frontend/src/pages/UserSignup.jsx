@@ -85,7 +85,7 @@ const UserSignup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
-            className="mt-10 bg-[#10b461] rounded px-4 py-2 w-full text-lg text-white"
+            className="mt-10 bg-[#10b461 ] rounded px-4 py-2 w-full text-lg text-white"
             type="submit"
           >
             Signup as User
